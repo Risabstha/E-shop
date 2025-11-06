@@ -17,7 +17,7 @@ const SearchBar: React.FC = () => {
 
   return (
   <form onSubmit={searchItems}>
-<div className="flex items-center w-full max-w-md  bg-gray-100 rounded-lg px-4 py-3 shadow-sm focus-within:ring-2 focus-within:ring-gray-300">
+<div className="flex items-center  w-[35vw]  bg-gray-200 rounded-lg px-4 py-3 shadow-sm focus-within:ring-2 focus-within:ring-gray-300">
   <input
     type="text"
     placeholder="Search for products..."

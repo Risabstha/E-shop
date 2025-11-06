@@ -4,7 +4,7 @@ import { MdOutlineShoppingCart } from 'react-icons/md'
 const Add2Cart = () => {
   return (
     <div>
-      <MdOutlineShoppingCart />
+      
     </div>
   )
 }
