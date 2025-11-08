@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+:root {
+    color:#333333;
+    background-color:#F9FAFB;
+}
+
+/* 
+main headings: #1E3A8A
+buttons : #FF6B35
+Background: #F9FAFB
+text-[#333333]*/

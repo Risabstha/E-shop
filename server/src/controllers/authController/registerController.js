@@ -23,7 +23,7 @@ export const registerUser = async (req, res) => {
     // existing user check, findOne le null return garcha if user not found
     const existingUser = await existingUserFun(email);     
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists." });
+      return res.status(409).json({ message: "Email id already exists." });
     }
 
     const hashedPassword = await hashPasswordFun(password);
