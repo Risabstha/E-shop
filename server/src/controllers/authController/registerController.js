@@ -1,13 +1,13 @@
 import { createUserFun, existingUserFun, hashPasswordFun } from "../../services/authServices/registerServices.js";
 
 export const registerUser = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, phone } = req.body;
 
   const errors = [];
 
   try {
     //validation
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !phone) {
       errors.push("All fields are required.");
     }
     if (!/\S+@\S+\.\S+/.test(email)) {
@@ -15,6 +15,10 @@ export const registerUser = async (req, res) => {
     }
     if (password.length < 6 || password.length > 20) {
       errors.push("Password must be 6 and 20 characters long.");
+    }
+    // Phone validation: only numbers and length check
+    if (!/^\d{10}$/.test(phone.toString())) {
+      errors.push("Phone number must be exactly 10 digits with no special characters.");
     }
     if (errors.length > 0) {
       return res.status(400).json({ errors });
@@ -28,7 +32,7 @@ export const registerUser = async (req, res) => {
 
     const hashedPassword = await hashPasswordFun(password);
     
-    const createUser = await createUserFun(username, email, hashedPassword);
+    const createUser = await createUserFun(username, email, hashedPassword, phone);
 
     return res
       .status(201)
@@ -36,7 +40,8 @@ export const registerUser = async (req, res) => {
             user: {
               id: createUser._id,
               username: createUser.username,
-              email: createUser.email
+              email: createUser.email,
+              phone: createUser.phone
             }
        });
 

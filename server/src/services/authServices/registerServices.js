@@ -12,11 +12,12 @@ export const hashPasswordFun = async (password) => {
     return hashedPassword;
 };
 
-export const createUserFun = async (username, email, password) => {
+export const createUserFun = async (username, email, password, phone) => {
     const newUser = new userModel({
         username,
         email,
-        password
+        password,
+        phone
     });
     await newUser.save();
     return newUser;

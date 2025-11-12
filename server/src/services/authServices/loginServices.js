@@ -16,8 +16,9 @@ export const createToken = (user) => {
   const payload = {
     id: user._id,
     name: user.username,
-    email: user.email
-    // iat: issued at timestamp (in seconds since epoch)
+    email: user.email,
+    phone: user.phone,
+    // iat: issued at timestamp (in seconds since epoch) by default jwt includes these in payload
     // exp: expiration timestamp (in seconds since epoch)
   };
   const token = jwt.sign(payload, process.env.JWT_SECRET,
