@@ -2,7 +2,7 @@
 const WishList = () => {
   return (
     <div>
-      
+      wishlist
     </div>
   )
 }

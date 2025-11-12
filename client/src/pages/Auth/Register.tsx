@@ -9,6 +9,7 @@ import ButtonForm from "../../components/formComponents/ButtonForm.tsx";
 interface formvalue {
   username: string;
   email: string;
+  phone: string;
   password: string;
 }
 const Register = () => {
@@ -16,6 +17,7 @@ const Register = () => {
   const [formValue, setFormValue] = useState<formvalue>({
     username: "",
     email: "",
+    phone: "",
     password: "",
   });
   const [message, setMessage] = useState<string>("");
@@ -33,6 +35,8 @@ const Register = () => {
       return "All fields are required";
     } else if (formValue.password.length < 6) {
       return "Password must be at least 6 characters long";
+    } else if (formValue.phone && !/^\d{10}$/.test(formValue.phone)) {
+      return "Phone number must be 10 digits";
     } else if (!/\S+@\S+\.\S+/.test(formValue.email)) {
       return "Email format is invalid";
     } else {
@@ -43,36 +47,36 @@ const Register = () => {
   const submitRegistration = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const validationMessage =  RegisterValidation();
-      if( validationMessage) {   
-        setMessage(validationMessage); 
-        return ;}
+      const validationMessage = RegisterValidation();
+      if (validationMessage) {
+        setMessage(validationMessage);
+        return;
+      }
 
-        //only runs if validationMessage is empty
-        const res = await registerUser(formValue);
-        if( res.status === 201){
-        setFormValue({ username: "", email: "", password: "" });
+      //only runs if validationMessage is empty
+      const res = await registerUser(formValue);
+      if (res.status === 201) {
+        setFormValue({ username: "", email: "", phone: "", password: "" });
         setMessage("");
         Navigate("/login");
       }
-    
-    } catch (err : any) {
+    } catch (err: any) {
       console.error("Registration failed", err);
       // Axios puts response info in err.response
-    if (err.response) {
-      const { status, data } = err.response;    // status le status contain garxa , data le json contain garxa (axios le parse gari sakeko hunxa )
+      if (err.response) {
+        const { status, data } = err.response; // status le status contain garxa , data le json contain garxa (axios le parse gari sakeko hunxa )
 
-      if (status === 409) {
-        setMessage(data.message );
-      } else if (status === 400) {
-        setMessage(data.message);
+        if (status === 409) {
+          setMessage(data.message);
+        } else if (status === 400) {
+          setMessage(data.message);
+        } else {
+          setMessage(data?.message || "Something went wrong"); // error object (err) that Axios throws still includes a .response.data property.
+        }
       } else {
-        setMessage(data?.message || "Something went wrong");  // error object (err) that Axios throws still includes a .response.data property. 
+        // network or unknown error
+        setMessage("Network error. Please try again later.");
       }
-    } else {
-      // network or unknown error
-      setMessage("Network error. Please try again later.");
-    }
     }
   };
 
@@ -103,6 +107,14 @@ const Register = () => {
               name="email"
               value={formValue.email}
               placeholders="Email"
+              onChange={formValueChange}
+            />
+            <InputField
+              type="string"
+              id="phone"
+              name="phone"
+              value={formValue.phone}
+              placeholders="Phone Number"
               onChange={formValueChange}
             />
             <InputField

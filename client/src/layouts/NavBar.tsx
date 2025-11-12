@@ -1,9 +1,9 @@
-import { MdOutlineShoppingCart } from "react-icons/md";
+import { MdOutlineSecurity, MdOutlineShoppingCart } from "react-icons/md";
 import logo from "../assets/logo_light.png";
 import SearchBar from "../components/NavBarComponent/SearchBar";
 import { FaRegHeart, FaRegUser } from "react-icons/fa";
 import { useEffect, useRef, useState, type JSX } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Tooltip from "@mui/material/Tooltip";
 import { FaLocationDot } from "react-icons/fa6";
@@ -43,11 +43,17 @@ const userOption: useroption[] = [
   {
     title: "My List",
     icon: <FaRegHeart size={18} className="text-gray-600" />,
-    link: "/mylist",
+    link: "/wishlist",
   },
+  {
+    title: "Account Security",
+    icon: <MdOutlineSecurity size={18} className="text-gray-600" />,
+    link: "/security",
+  }
 ];
 
 const NavBar = () => {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<DecodedToken | null>(null);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
@@ -87,6 +93,7 @@ const NavBar = () => {
     setIsLoggedIn(false);
     setUserInfo(null);
     setShowDropdown(false);
+    navigate("/")
     window.location.reload();
   };
 
