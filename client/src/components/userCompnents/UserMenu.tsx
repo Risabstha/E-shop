@@ -1,3 +1,5 @@
+import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
 import {
   FaRegUser,
   FaMapPin,
@@ -7,6 +9,14 @@ import {
 } from "react-icons/fa";
 import { MdOutlineSecurity } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
+
+interface DecodedToken {
+  id: string; 
+  name: string;
+  email: string;
+  exp?: number;
+  iat?: number;
+};
 
 const UserMenu = () => {
   const location = useLocation();
@@ -42,6 +52,17 @@ const UserMenu = () => {
       link: "/security",
     },
   ];
+
+  const [userInfo, setUserInfo] = useState<DecodedToken | null>(null);
+
+  useEffect( () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decode: DecodedToken = jwtDecode(token);
+      setUserInfo(decode);
+    }
+  })
+ 
   return (
     <div className=" ">
       
@@ -54,9 +75,11 @@ const UserMenu = () => {
               <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gray-200 flex items-center justify-center">
                 <FaRegUser size={40} className="text-gray-600" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900">asdf</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                {userInfo?.name}
+              </h3>
               <p className="text-sm text-gray-600 truncate">
-                asdfasdf@gmail.com
+                {userInfo?.email}
               </p>
             </div>
 

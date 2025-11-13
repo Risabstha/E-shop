@@ -84,16 +84,14 @@ const UserEdit = () => {
     
       // Call updateUser with formData and userId
       const response = await updateUser(dataToSend, userId, token); // login vayepachi hune sabai rest operation ma token send garna parxa
-
+      console.log("running 2");
       if (response.status === 200) {
-        setSuccess("Profile updated successfully! Please refresh the page to see changes.");
+        setSuccess("Profile updated successfully!");
         setFormData({ fullName: "", email: "", phone: "" });
 
-        // Update localStorage with new token
-        if (response.data.token) {
-          localStorage.setItem("token", response.data.token);
-        
-        
+        // Update localStorage if needed
+        if (response.data.user) {
+          localStorage.setItem("user", JSON.stringify(response.data.user));
         }
       }
     } catch (err: any) {

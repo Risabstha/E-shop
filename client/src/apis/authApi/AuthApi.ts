@@ -13,7 +13,7 @@ export const loginUser = async(credentials: { email: string; password: string })
 }
 
 export const updateUser = async(userData: { username?: string; email?: string; phone?: string }, userId: string, token: string) => {
-    const response = await api.put(`/api/user/${userId}`, userData, {
+    const response = await api.put(`/api/user/userUpdate/${userId}`, userData, {
       headers: {
         Authorization: `Bearer ${token}`
       }
