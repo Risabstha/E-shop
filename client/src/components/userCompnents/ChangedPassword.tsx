@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import InputField from "../formComponents/InputField";
 import { updatePassword } from "../../apis/authApi/AuthApi";
 import { jwtDecode } from "jwt-decode";
+import Checkbox from "@mui/material/Checkbox";
 
 interface DecodedToken {
   id: string;
@@ -18,10 +19,14 @@ const ChangedPassword = () => {
     newPassword: "",
     confirmPassword: "",
   });
+  const [eye, setEye] = useState<boolean>(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
 
+  const handleEye = () => {
+    setEye(!eye);
+  };
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -36,19 +41,17 @@ const ChangedPassword = () => {
     }
   };
   const Datatoupdate = () => {
-    const {currentPassword, newPassword, confirmPassword} = formData;
+    const { currentPassword, newPassword, confirmPassword } = formData;
     // Only include fields that have values
     const data: {
       currentPassword: string;
       newPassword: string;
       confirmPassword: string;
     } = {
-      currentPassword : currentPassword,
-      newPassword,        // it is newPassword : newPassword,
-      confirmPassword
+      currentPassword: currentPassword,
+      newPassword, // it is newPassword : newPassword,
+      confirmPassword,
     };
-
-
 
     return data;
   };
@@ -90,7 +93,11 @@ const ChangedPassword = () => {
       console.log("running 2");
       if (response.status === 200) {
         setSuccess("Profile updated successfully!");
-        setFormData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+        setFormData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
       }
     } catch (err: any) {
       const errorMsg =
@@ -119,12 +126,14 @@ const ChangedPassword = () => {
       )}
 
       {/* Form */}
-      <form className="space-y-6 flex flex-col items-center" onSubmit={handleUpdateProfile}>
+      <form
+        className="space-y-6 flex flex-col items-center"
+        onSubmit={handleUpdateProfile}
+      >
         <div className="grid grid-cols-1 md:grid-cols-1 gap-6 w-[50%] ">
-
-          {/* Full Name */}
+          {/* Current Password */}
           <InputField
-            type="password"
+            type={eye ? "text" : "password"}
             id="currentPassword"
             name="currentPassword"
             value={formData.currentPassword}
@@ -133,9 +142,9 @@ const ChangedPassword = () => {
             textarea={false}
           />
 
-          {/* Email */}
+          {/* new Password */}
           <InputField
-            type="password"
+            type={eye ? "text" : "password"}
             id="newPassword"
             name="newPassword"
             value={formData.newPassword}
@@ -144,7 +153,7 @@ const ChangedPassword = () => {
             textarea={false}
           />
           <InputField
-            type="password"
+            type={eye ? "text" : "password"}
             id="confirmPassword"
             name="confirmPassword"
             value={formData.confirmPassword}
@@ -154,9 +163,12 @@ const ChangedPassword = () => {
           />
         </div>
 
-        <div className="  m-auto ">
-          <div></div>
-        </div>
+          <p className="flex gap-x-1 w-1/2 justify-end items-center">
+            <p>Show Password</p>
+            <div onClick={handleEye}>
+              <Checkbox />
+            </div>
+          </p>
 
         {/* Update Button */}
         <div className="">
@@ -165,7 +177,7 @@ const ChangedPassword = () => {
             disabled={loading}
             className="px-8 py-3 bg-[#FF6B35] text-white font-semibold rounded-lg hover:bg-[#fa5518] transition duration-300 shadow hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "UPDATING..." : "UPDATE PROFILE"}
+            {loading ? "UPDATING..." : "UPDATE PASSWORD"}
           </button>
         </div>
       </form>

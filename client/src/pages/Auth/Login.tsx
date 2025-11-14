@@ -51,6 +51,7 @@ const Login = () => {
 
     try{
       const res = await loginUser(formValue);
+      setFormValue((prev) => ({ ...prev, password: "" }));    //We use parentheses ({...prev, password: ""}), so JavaScript treats the curly braces {} as an object, not as a function body.
       if( res.status === 200){
         setFormValue({ email: "", password: "" });
         setMessage("");
@@ -64,11 +65,14 @@ const Login = () => {
       const {status, data} = error.response;
       if(status === 404 ) {
         setMessage("User not found. Please register first.");
+        setFormValue((prev) => ({ ...prev, password: "" }));
       }
        else if (status === 400) {
         setMessage(data.message);
+        setFormValue((prev) => ({ ...prev, password: "" }));
       } else {
         setMessage(data?.message || "Something went wrong");  // error object (err) that Axios throws still includes a .response.data property. 
+        setFormValue((prev) => ({ ...prev, password: "" }));
       }
     }
   }
