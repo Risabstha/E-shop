@@ -20,3 +20,14 @@ export const updateUser = async(userData: { username?: string; email?: string; p
     });
     return response;
 }
+
+
+export const updatePassword = async( passwordData : {currentPassword : string; newPassword : string; confirmPassword : string;} , userId: string, token: string) =>
+{
+  const response = await api.put(`/api/user/password/${userId}`, passwordData, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return response;
+}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import InputField from "../formComponents/InputField";
-import { updateUser } from "../../apis/authApi/AuthApi";
+import { updatePassword } from "../../apis/authApi/AuthApi";
 import { jwtDecode } from "jwt-decode";
 
 interface DecodedToken {
@@ -12,11 +12,11 @@ interface DecodedToken {
   iat?: number;
 }
 
-const UserEdit = () => {
+const ChangedPassword = () => {
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,22 +30,25 @@ const UserEdit = () => {
   };
 
   const InputValidation = () => {
-    const { fullName, email, phone } = formData;
-    if (!fullName && !email && !phone) {
-      return "At least one field must be filled.";
+    const { currentPassword, newPassword, confirmPassword } = formData;
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return "All fields must be filled.";
     }
   };
   const Datatoupdate = () => {
+    const {currentPassword, newPassword, confirmPassword} = formData;
     // Only include fields that have values
     const data: {
-      username?: string;
-      email?: string;
-      phone?: string;
-    } = {};
+      currentPassword: string;
+      newPassword: string;
+      confirmPassword: string;
+    } = {
+      currentPassword : currentPassword,
+      newPassword,        // it is newPassword : newPassword,
+      confirmPassword
+    };
 
-    if (formData.fullName) data.username = formData.fullName;
-    if (formData.email) data.email = formData.email;
-    if (formData.phone) data.phone = formData.phone;
+
 
     return data;
   };
@@ -80,19 +83,14 @@ const UserEdit = () => {
       }
 
       const dataToSend = Datatoupdate();
-      console.log("🚀 ~ handleUpdateProfile ~ dataToSend:", dataToSend)
-    
+      console.log("🚀 ~ handleUpdateProfile ~ dataToSend:", dataToSend);
+
       // Call updateUser with formData and userId
-      const response = await updateUser(dataToSend, userId, token); // login vayepachi hune sabai rest operation ma token send garna parxa
+      const response = await updatePassword(dataToSend, userId, token); // login vayepachi hune sabai rest operation ma token send garna parxa
       console.log("running 2");
       if (response.status === 200) {
         setSuccess("Profile updated successfully!");
-        setFormData({ fullName: "", email: "", phone: "" });
-
-        // Update localStorage if needed
-        if (response.data.user) {
-          localStorage.setItem("user", JSON.stringify(response.data.user));
-        }
+        setFormData({ currentPassword: "", newPassword: "", confirmPassword: "" });
       }
     } catch (err: any) {
       const errorMsg =
@@ -121,48 +119,47 @@ const UserEdit = () => {
       )}
 
       {/* Form */}
-      <form className="space-y-6" onSubmit={handleUpdateProfile}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form className="space-y-6 flex flex-col items-center" onSubmit={handleUpdateProfile}>
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-6 w-[50%] ">
+
           {/* Full Name */}
           <InputField
-            type="text"
-            id="fullName"
-            name="fullName"
-            value={formData.fullName}
+            type="password"
+            id="currentPassword"
+            name="currentPassword"
+            value={formData.currentPassword}
             onChange={handleInputChange}
-            placeholders="Full Name"
+            placeholders="Current Password"
             textarea={false}
           />
 
           {/* Email */}
           <InputField
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
+            type="password"
+            id="newPassword"
+            name="newPassword"
+            value={formData.newPassword}
             onChange={handleInputChange}
-            placeholders="Email Address"
+            placeholders="New Password"
+            textarea={false}
+          />
+          <InputField
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleInputChange}
+            placeholders="Confirm Password"
             textarea={false}
           />
         </div>
 
-        {/* Phone */}
         <div className="  m-auto ">
-          <div className="w-[48.5%]">
-            <InputField
-              type="string"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              placeholders="Phone Number"
-              textarea={false}
-            />
-          </div>
+          <div></div>
         </div>
 
         {/* Update Button */}
-        <div className="pt-4">
+        <div className="">
           <button
             type="submit"
             disabled={loading}
@@ -176,4 +173,4 @@ const UserEdit = () => {
   );
 };
 
-export default UserEdit;
+export default ChangedPassword;

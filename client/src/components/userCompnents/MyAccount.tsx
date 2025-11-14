@@ -1,7 +1,8 @@
-import React, { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import UserEdit from "./UserEdit";
+import ChangedPassword from "./ChangedPassword";
 
 interface DecodedToken {
   id: string;
@@ -27,12 +28,12 @@ const Reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "TOGGLE_CHANGE_PASSWORD":
       return {
-        editProfile: !state.editProfile,
+        editProfile: false,
         changePassword: !state.changePassword,
       };
     case "TOGGLE_EDIT_PROFILE":
       return {
-        changePassword: !state.changePassword,
+        changePassword: false,
         editProfile: !state.editProfile,
       };
     default:
@@ -58,7 +59,6 @@ const MyAccount = () => {
       setUserInfo(decode);
     }
   }, []);
-
 
   return (
     <div className=" mx-auto px-4 w-full  ">
@@ -141,10 +141,8 @@ const MyAccount = () => {
             </Link>
           </div>
 
-        
-
           {/* changePassword ? */}
-                 {/* <div
+          {/* <div
               className={`transition-all duration-500 ease-in-out overflow-hidden 
                 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200
                 ${
@@ -173,25 +171,49 @@ const MyAccount = () => {
                 </div>
               )} */}
       </div>
-        {/* Edit Profile Section with Transition */}
-          <div
-              className={`transition-all duration-900 ease-in-out overflow-hidden  mt-8
+      {/* Edit Profile Section with Transition */}
+      {state.editProfile && (
+        <div
+          className={`transition-all duration-900 ease-in-out overflow-hidden  mt-8
                 p-6 bg-gradient-to-r bg-[#F9FAFB] rounded-lg border border-blue-200
                 ${
-              state.editProfile
-                ? "opacity-100 max-h-[1000px] visible"
-                : "opacity-0 max-h-0 invisible transition-opacity duration-2000 ease-in-out"
-            }`}
-          >
-             <h3 className="text-lg font-semibold text-gray-900  flex items-center gap-2">
-              Edit User Information
-            </h3>
-            {state.editProfile && (
-              <div className="mt-2 pt-4 border-t border-gray-200">
-                <UserEdit />
-              </div>
-            )}
-          </div>
+                  state.editProfile
+                    ? "opacity-100 max-h-[1000px] visible"
+                    : "opacity-0 max-h-0 invisible transition-opacity duration-2000 ease-in-out"
+                }`}
+        >
+          <h3 className="text-lg font-semibold text-gray-900  flex items-center gap-2">
+            Edit User Information
+          </h3>
+          {state.editProfile && (
+            <div className="mt-2 pt-4 border-t border-gray-200">
+              <UserEdit />
+            </div>
+          )}
+        </div>
+      )}
+
+      {state.changePassword && (
+        // {/* Edit Profile Section with Transition */}
+        <div
+          className={`transition-all duration-900 ease-in-out overflow-hidden  mt-8
+                p-6 bg-gradient-to-r bg-[#F9FAFB] rounded-lg border border-blue-200
+                ${
+                  state.changePassword
+                    ? "opacity-100 max-h-[1000px] visible"
+                    : "opacity-0 max-h-0 invisible transition-opacity duration-2000 ease-in-out"
+                }`}
+        >
+          <h3 className="text-lg font-semibold text-gray-900  flex items-center gap-2">
+            Edit User Information
+          </h3>
+          {state.changePassword && (
+            <div className="mt-2 pt-4 border-t border-gray-200">
+              <ChangedPassword />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
